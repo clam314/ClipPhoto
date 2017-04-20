@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -107,20 +110,50 @@ public class ImageTouchView extends ImageView {
         return new PointF(midx/2, midy/2);
     }
 
+    /**
+     *根据裁剪框的位置和大小,截取图片
+     *
+     *@param frameView 裁剪框
+     */
     public Bitmap getBitmap(ClipFrameView frameView) {
+        if(frameView == null)return null;
         setDrawingCacheEnabled(true);
         buildDrawingCache();
 
-        int left = (int) frameView.getFramePosition().x;
-        int top = (int) frameView.getFramePosition().y;
-        int width = (int) frameView.getFrameWidth();
-        int height = (int) frameView.getFrameHeight();
+        //判断裁剪框的区域是否超过了View的大小，避免超过大小而报错
+        int left =  frameView.getFramePosition().x > 0 ? (int)frameView.getFramePosition().x : 0;
+        int top = frameView.getFramePosition().y > 0 ? (int)frameView.getFramePosition().y : 0;
+        int width = left+frameView.getFrameWidth() < mWidth ? (int)frameView.getFrameWidth() : (int)mWidth;
+        int height = top+frameView.getFrameHeight() < mHeight ? (int)frameView.getFrameHeight() : (int)mHeight;
         //根据裁剪框的位置和大小,截取图片
         Bitmap finalBitmap = Bitmap.createBitmap(getDrawingCache(),left,top,width,height);
         // 释放资源
         destroyDrawingCache();
         return finalBitmap;
     }
+
+    /**
+     *将图片自动缩放到裁剪框的上部
+     *
+     *@param frameView 裁剪框
+     */
+    public void autoFillClipFrame(ClipFrameView frameView){
+        if(getDrawable() == null || frameView == null)return;
+
+        float left = frameView.getFramePosition().x;
+        float top = frameView.getFramePosition().y;
+        float width = frameView.getFrameWidth();
+        float height = frameView.getFrameHeight();
+        RectF dstRect = new RectF(left,top,left+width,top+height);
+        RectF srcRect = new RectF(0,0,getDrawable().getIntrinsicWidth(),getDrawable().getMinimumHeight());
+        Matrix newMatrix = new Matrix();
+        //将源矩阵矩阵填充到目标矩阵，这里选择对其左上，根据需求可以选其他模式
+        newMatrix.setRectToRect(srcRect,dstRect, Matrix.ScaleToFit.START);
+        setImageMatrix(newMatrix);
+        matrix = newMatrix;
+        invalidate();
+    }
+
 
     /**
      *设置图片

@@ -16,40 +16,43 @@ import android.view.View;
  * Created by clam314 on 2017/4/19
  */
 
-public class FrameView extends View implements ClipFrameView {
+public class RectFrameView extends View implements ClipFrameView {
 
-    private float frameWidth;
-    private float frameHeight;
-    private float frameScale; //width/height
-    private float frameStrokeWidth;
-    private float mWidth;
-    private float mHeight;
+    protected float frameWidth;
+    protected float frameHeight;
+    protected float frameScale; //width/height
+    protected float frameStrokeWidth;
+    protected int frameStrokeColor;
+    protected float mWidth;
+    protected float mHeight;
 
-    private Paint paint;
-    private Path globalPath;
-    private Path framePath;
-    private PorterDuffXfermode xfermode;
+    protected Paint paint;
+    protected Path globalPath;
+    protected Path framePath;
+    protected PorterDuffXfermode xfermode;
 
-    public FrameView(Context context) {
+
+    public RectFrameView(Context context) {
         this(context,null);
     }
 
-    public FrameView(Context context, AttributeSet attrs) {
+    public RectFrameView(Context context, AttributeSet attrs) {
         this(context,attrs,0);
     }
 
-    public FrameView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RectFrameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    private void init(){
+    protected void init(){
         xfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         globalPath = new Path();
         framePath = new Path();
         frameStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,2,getContext().getResources().getDisplayMetrics());
         frameScale = 2f/3;
+        frameStrokeColor = Color.YELLOW;
 
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
@@ -81,7 +84,7 @@ public class FrameView extends View implements ClipFrameView {
         canvas.drawPath(framePath,paint);
         paint.setXfermode(null);
         //描出边框
-        paint.setColor(Color.YELLOW);
+        paint.setColor(frameStrokeColor);
         paint.setAlpha(255);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(frameStrokeWidth);

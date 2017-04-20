@@ -31,6 +31,14 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+        findViewById(R.id.reset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(imageView instanceof ImageTouchView){
+                    ((ImageTouchView) imageView).autoFillClipFrame(clipFrameView);
+                }
+            }
+        });
         imageView = (ImageView)findViewById(R.id.image_view);
         clipFrameView = (ClipFrameView)findViewById(R.id.frame_view);
 
@@ -39,5 +47,15 @@ public class MainActivity extends AppCompatActivity{
         if(imageView instanceof  ImageTouchView){
             ((ImageTouchView) imageView).setImageFile(file.getAbsolutePath(),2);
         }
+
+
+        imageView.post(new Runnable() {
+            @Override
+            public void run() {
+                if(imageView instanceof ImageTouchView){
+                    ((ImageTouchView) imageView).autoFillClipFrame(clipFrameView);
+                }
+            }
+        });
     }
 }
