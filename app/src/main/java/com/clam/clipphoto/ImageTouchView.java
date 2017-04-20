@@ -2,6 +2,7 @@ package com.clam.clipphoto;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.util.AttributeSet;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
  */
 
 public class ImageTouchView extends ImageView {
+    private float mWidth;
+    private float mHeight;
 
     private PointF startPoint = new PointF();
     private Matrix matrix = new Matrix();
@@ -25,24 +28,22 @@ public class ImageTouchView extends ImageView {
     private float startDis = 0;
     private PointF midPoint;//中心点
 
-    /**
-     * 默认构造函数
-     * @param context
-     */
+
     public ImageTouchView(Context context){
         super(context);
     }
 
-    /**
-     * 该构造方法在静态引入XML文件中是必须的
-     * @param context
-     * @param paramAttributeSet
-     */
+
     public ImageTouchView(Context context,AttributeSet paramAttributeSet){
         super(context,paramAttributeSet);
     }
 
-
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mWidth = w;
+        mHeight = h;
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -91,8 +92,6 @@ public class ImageTouchView extends ImageView {
 
     /**
      * 两点之间的距离
-     * @param event
-     * @return
      */
     private static float distance(MotionEvent event){
         //两根手指间的距离
@@ -103,8 +102,6 @@ public class ImageTouchView extends ImageView {
 
     /**
      * 计算两点之间中心点的位置
-     * @param event
-     * @return
      */
     private static PointF mid(MotionEvent event){
         float midx = event.getX(1) + event.getX(0);
@@ -127,4 +124,40 @@ public class ImageTouchView extends ImageView {
         return finalBitmap;
     }
 
+    /**
+     *设置图片
+     *
+     * @param filePath 图片的完整路径
+     * @param multiple 倍数，当图片宽或高大于Vie的宽或高multiple倍实行向下采样
+     */
+    public void setImageFile(final String filePath,final int multiple){
+        post(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bitmap = getSmallBitmap(filePath,(int) mWidth,(int)mHeight,multiple);
+                if(bitmap != null)setImageBitmap(bitmap);
+            }
+        });
+    }
+
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight,int  multiple) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        if (height > reqHeight *multiple|| width > reqWidth*multiple) {
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        return inSampleSize;
+    }
+
+    private static Bitmap getSmallBitmap(String filePath, int w, int h,int multiple) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+        options.inSampleSize = calculateInSampleSize(options, w, h,multiple);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(filePath, options);
+    }
 }

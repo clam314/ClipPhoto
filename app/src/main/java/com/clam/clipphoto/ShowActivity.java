@@ -12,6 +12,6 @@ public class ShowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
         ImageView imageView = (ImageView) findViewById(R.id.image_show);
-        imageView.setImageBitmap(save);
+        if(save != null)imageView.setImageBitmap(save);
     }
 }

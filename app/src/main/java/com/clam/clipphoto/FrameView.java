@@ -60,7 +60,8 @@ public class FrameView extends View implements ClipFrameView {
         super.onSizeChanged(w, h, oldw, oldh);
         mWidth = w;
         mHeight = h;
-        frameWidth = mWidth/5*4;
+        int length = w>h?h:w;
+        frameWidth = length/5*4;
         frameHeight = frameWidth/frameScale;
         globalPath.addRect(-w/2,-h/2,w/2,h/2, Path.Direction.CW);//顺时针
         framePath.addRect(-frameWidth/2,-frameHeight/2,frameWidth/2,frameHeight/2, Path.Direction.CW);
