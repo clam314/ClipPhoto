@@ -13,11 +13,10 @@ import android.util.TypedValue;
 import android.view.View;
 
 /**
- * Created by clam314 on 2017/4/19
+ * Created by clam314 on 2017/4/20
  */
 
-public class FrameView extends View implements ClipFrameView {
-
+public class CircleFrameView extends View implements ClipFrameView {
     private float frameWidth;
     private float frameHeight;
     private float frameScale; //width/height
@@ -30,15 +29,15 @@ public class FrameView extends View implements ClipFrameView {
     private Path framePath;
     private PorterDuffXfermode xfermode;
 
-    public FrameView(Context context) {
+    public CircleFrameView(Context context) {
         this(context,null);
     }
 
-    public FrameView(Context context, AttributeSet attrs) {
-        this(context,attrs,0);
+    public CircleFrameView(Context context, AttributeSet attrs) {
+        this(context, attrs,0);
     }
 
-    public FrameView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CircleFrameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -54,16 +53,16 @@ public class FrameView extends View implements ClipFrameView {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mWidth = w;
         mHeight = h;
-        frameWidth = mWidth/5*4;
-        frameHeight = frameWidth/frameScale;
+        frameWidth = mWidth/5*3;
+        frameHeight = frameWidth;
         globalPath.addRect(-w/2,-h/2,w/2,h/2, Path.Direction.CW);//顺时针
-        framePath.addRect(-frameWidth/2,-frameHeight/2,frameWidth/2,frameHeight/2, Path.Direction.CW);
+        framePath.addCircle(0,0,frameHeight/2, Path.Direction.CW);
+//        framePath.addRect(-frameWidth/2,-frameHeight/2,frameWidth/2,frameHeight/2, Path.Direction.CW);
     }
 
     @Override

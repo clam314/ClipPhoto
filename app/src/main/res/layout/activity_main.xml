@@ -34,7 +34,7 @@
             android:src="@drawable/image_clip_small"
             android:scaleType="matrix" />
 
-        <com.clam.clipphoto.FrameView
+        <com.clam.clipphoto.CircleFrameView
             android:id="@+id/frame_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

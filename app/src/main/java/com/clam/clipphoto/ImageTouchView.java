@@ -1,6 +1,7 @@
 package com.clam.clipphoto;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.util.AttributeSet;
@@ -109,6 +110,21 @@ public class ImageTouchView extends ImageView {
         float midx = event.getX(1) + event.getX(0);
         float midy = event.getY(1) + event.getY(0);
         return new PointF(midx/2, midy/2);
+    }
+
+    public Bitmap getBitmap(ClipFrameView frameView) {
+        setDrawingCacheEnabled(true);
+        buildDrawingCache();
+
+        int left = (int) frameView.getFramePosition().x;
+        int top = (int) frameView.getFramePosition().y;
+        int width = (int) frameView.getFrameWidth();
+        int height = (int) frameView.getFrameHeight();
+
+        Bitmap finalBitmap = Bitmap.createBitmap(getDrawingCache(),left,top,width,height);
+        // 释放资源
+        destroyDrawingCache();
+        return finalBitmap;
     }
 
 }
