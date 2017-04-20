@@ -20,7 +20,7 @@ public class ImageTouchView extends ImageView {
 
     private PointF startPoint = new PointF();
     private Matrix matrix = new Matrix();
-    private Matrix currentMaritx = new Matrix();
+    private Matrix currentMatrix = new Matrix();
 
     private int mode = 0;//用于标记模式
     private static final int DRAG = 1;//拖动
@@ -28,11 +28,9 @@ public class ImageTouchView extends ImageView {
     private float startDis = 0;
     private PointF midPoint;//中心点
 
-
     public ImageTouchView(Context context){
         super(context);
     }
-
 
     public ImageTouchView(Context context,AttributeSet paramAttributeSet){
         super(context,paramAttributeSet);
@@ -50,21 +48,21 @@ public class ImageTouchView extends ImageView {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 mode = DRAG;
-                currentMaritx.set(this.getImageMatrix());//记录ImageView当期的移动位置
+                currentMatrix.set(this.getImageMatrix());//记录ImageView当期的移动位置
                 startPoint.set(event.getX(),event.getY());//开始点
                 break;
             case MotionEvent.ACTION_MOVE://移动事件
                 if (mode == DRAG) {//图片拖动事件
                     float dx = event.getX() - startPoint.x;//x轴移动距离
                     float dy = event.getY() - startPoint.y;//y轴移动距离
-                    matrix.set(currentMaritx);//在当前的位置基础上移动
+                    matrix.set(currentMatrix);//在当前的位置基础上移动
                     matrix.postTranslate(dx, dy);
                 } else if(mode == ZOOM){//图片放大事件
                     float endDis = distance(event);//结束距离
                     if(endDis > 10f){
                         float scale = endDis / startDis;//放大倍数
                         Log.v("scale=", String.valueOf(scale));
-                        matrix.set(currentMaritx);
+                        matrix.set(currentMatrix);
                         matrix.postScale(scale, scale, midPoint.x, midPoint.y);
                     }
                 }
@@ -82,7 +80,7 @@ public class ImageTouchView extends ImageView {
                 startDis = distance(event);//计算得到两根手指间的距离
                 if(startDis > 10f){//避免手指上有两个茧
                     midPoint = mid(event);//计算两点之间中心点的位置
-                    currentMaritx.set(this.getImageMatrix());//记录当前的缩放倍数
+                    currentMatrix.set(this.getImageMatrix());//记录当前的缩放倍数
                 }
                 break;
             }
@@ -117,7 +115,7 @@ public class ImageTouchView extends ImageView {
         int top = (int) frameView.getFramePosition().y;
         int width = (int) frameView.getFrameWidth();
         int height = (int) frameView.getFrameHeight();
-
+        //根据裁剪框的位置和大小,截取图片
         Bitmap finalBitmap = Bitmap.createBitmap(getDrawingCache(),left,top,width,height);
         // 释放资源
         destroyDrawingCache();
@@ -134,16 +132,18 @@ public class ImageTouchView extends ImageView {
         post(new Runnable() {
             @Override
             public void run() {
+                //为了获取view的大小
                 Bitmap bitmap = getSmallBitmap(filePath,(int) mWidth,(int)mHeight,multiple);
                 if(bitmap != null)setImageBitmap(bitmap);
             }
         });
     }
 
+    //计算图片的缩放大小
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight,int  multiple) {
         final int height = options.outHeight;
         final int width = options.outWidth;
-        int inSampleSize = 1;
+        int inSampleSize = 1;//1是不缩放，2是缩小1/2,4是缩小1/4等
         if (height > reqHeight *multiple|| width > reqWidth*multiple) {
             final int heightRatio = Math.round((float) height / (float) reqHeight);
             final int widthRatio = Math.round((float) width / (float) reqWidth);
@@ -154,7 +154,7 @@ public class ImageTouchView extends ImageView {
 
     private static Bitmap getSmallBitmap(String filePath, int w, int h,int multiple) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
+        options.inJustDecodeBounds = true;//true的话，不会真的把bitmap加载到内存,但能获取bitmap的大小信息等
         BitmapFactory.decodeFile(filePath, options);
         options.inSampleSize = calculateInSampleSize(options, w, h,multiple);
         options.inJustDecodeBounds = false;

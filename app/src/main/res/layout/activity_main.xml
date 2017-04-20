@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical" >
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#306FED"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp" >
+        android:background="#dafc"
+        >
 
         <TextView
             android:id="@+id/sure"
@@ -21,7 +19,7 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="确定"
-            android:textColor="#ffffff" />
+            android:textColor="#000000" />
     </RelativeLayout>
     <FrameLayout
         android:layout_width="match_parent"
@@ -34,7 +32,7 @@
             android:src="@drawable/image_clip_small"
             android:scaleType="matrix" />
 
-        <com.clam.clipphoto.CircleFrameView
+        <com.clam.clipphoto.FrameView
             android:id="@+id/frame_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
