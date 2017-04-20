@@ -1,15 +1,15 @@
 # ClipPhoto
 ### 一个图片裁剪工具
 
-![矩形裁剪框](http://upload-images.jianshu.io/upload_images/1699916-a580047a8ceefa6b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![矩形裁剪框](https://github.com/clam314/Image/blob/master/clip1.png)
 
-![裁剪结果](http://upload-images.jianshu.io/upload_images/1699916-60ca141a554bbe53.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![裁剪结果](https://github.com/clam314/Image/blob/master/clip2.png)
 
-![圆形裁剪框](http://upload-images.jianshu.io/upload_images/1699916-0c8bb23c43a31f2a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![圆形裁剪框](https://github.com/clam314/Image/blob/master/clip3.png)
 
-![裁剪结果](http://upload-images.jianshu.io/upload_images/1699916-f38b04e6c74815cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![裁剪结果](https://github.com/clam314/Image/blob/master/clip4.png)
 
-![自适应](http://upload-images.jianshu.io/upload_images/1699916-6b69a68b4ebe17ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![自适应](https://github.com/clam314/Image/blob/master/clip5.png)
 
 项目中总是有裁剪图片的的需求，这次单抽出来做个小demo
 
